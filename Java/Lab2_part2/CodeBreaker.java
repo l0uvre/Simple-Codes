@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -131,6 +132,34 @@ public class CodeBreaker {
     return true;
   }
   
+  /***
+   * Calculate how many words can be found in the message according to the HashMap.
+   * 
+   * @param map The HashMap in which symbols as keys and true characters as values
+   * @param words The likely words array containing words that are probably in the message.
+   * @return the number of likely words can be found in the encrypted message using the HashMap.
+   */
+  private static int calMatches(HashMap<Character, Character> map, String[] words) {
+    int matches = 0;
+    String decoded = CodeUtil.decode(secretContent, map).toString();
+    for (int i = 0; i < words.length; i++) {
+      int index = 0;
+      while (index < decoded.length()) {
+        int startIndex = decoded.indexOf(words[i], index);
+        if (startIndex == -1) {
+          break;
+        } else {
+          matches += words[i].length();
+          index += startIndex + words[i].length();
+        }
+      }
+    }
+    return matches;
+  }
+  
+  
+  
+  
   
   
   /***
@@ -144,13 +173,14 @@ public class CodeBreaker {
    * @return final built HashMap
    *    The final HashMap to decrypt the data.
    */
-  public static HashMap<Character, Character> buildMap(HashMap<Character, Character> map, int index, String[] words) {
+  public static int buildMap(HashMap<Character, Character> map, int index, String[] words) {
     if (index >= words.length) {
-      return map;
+      return calMatches(map, words);
     }
 
     if (isPortablePattern(map, words[index])) {
       HashMap<Character, Character> trans1 = new HashMap<>();
+      int matches1, matches2;
       HashMap<Character, Character> trans2 = new HashMap<>();
       trans1.putAll(map);
       trans2.putAll(map);
@@ -184,14 +214,18 @@ public class CodeBreaker {
           }
         }
       }
+      
+      matches1 = buildMap(trans1, index + 1, words);
+      matches2 = buildMap(trans2, index + 1, words);
+      //trans1.putAll(buildMap(trans1, index + 1, words));
+      //trans2.putAll(buildMap(trans2, index + 1, words));
 
-      trans1.putAll(buildMap(trans1, index + 1, words));
-      trans2.putAll(buildMap(trans2, index + 1, words));
-
-      if (trans1.size() > trans2.size()) {
-        return trans1;
+      if (matches1 > matches2) {
+        map.putAll(trans1);
+        return matches1;
       } else {
-        return trans2;
+        map.putAll(trans2);
+        return matches2;
       }
 
     } else {
@@ -225,10 +259,17 @@ public class CodeBreaker {
       trans.put(threeChars.charAt(1), 'h');
       trans.put(threeChars.charAt(2), 'e');
 
-      trans = buildMap(trans, 0, likelyWords);
-
+      //trans = buildMap(trans, 0, likelyWords);
+      buildMap(trans, 0, likelyWords);
+      
       System.out.println(CodeUtil.decode(secretContent, trans));
 
+      //System.out.println(threeChars);
+      //System.out.println(trans.keySet().size());
+
+      //for (Entry<Character, Character> transEntry : trans.entrySet()) {
+        //System.out.println(transEntry.getKey() + " = " + transEntry.getValue());
+      //}
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
