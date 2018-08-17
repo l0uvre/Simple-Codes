@@ -1,5 +1,13 @@
 import java.util.*;
 class CheapestFlightsWithinKStops {
+    class City {
+        int id;
+        int cost;
+        City(int i, int c) {
+            id = i;
+            cost = c;
+        }
+    }
     public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
         Map<Integer, Map<Integer, Integer>> graph = new HashMap<>();
         for (int[] flight: flights) {
@@ -8,24 +16,32 @@ class CheapestFlightsWithinKStops {
             }
             graph.get(flight[0]).put(flight[1], flight[2]);
         }
-        
-        Queue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
-        pq.offer(new int[]{0, src, -1}); // cost, station, remaing stops.
-        
-        while (!pq.isEmpty()) {
-            int[] curr = pq.poll();
-            if (curr[1] == dst) {
-                return curr[0];
+        int minCost = Integer.MAX_VALUE;
+        Queue<City> q = new LinkedList<>();
+        q.offer(new City(src, 0));
+        int stop = -1;
+        while (!q.isEmpty()) {
+            if (stop > K) {
+                break;
             }
-            if (curr[2] < K) {
-                Map<Integer, Integer> neighbor = graph.getOrDefault(curr[1], new HashMap<>());
-                for (int key: neighbor.keySet()) {
-                    pq.offer(new int[]{neighbor.get(key) + curr[0], key, curr[2] + 1});
+            for (int i = q.size(); i > 0; i--) {
+                City curr = q.poll();
+                if (curr.id == dst) {
+                    minCost = Math.min(curr.cost, minCost);
+                }
+                Map<Integer, Integer> neighbors = graph.get(curr.id);
+                if (neighbors != null) {
+                    for (int key: neighbors.keySet()) {
+                        if (curr.cost + neighbors.get(key) < minCost) {
+                            q.offer(new City(key, curr.cost + neighbors.get(key)));
+                        }
+                    }
                 }
             }
+            stop++;
         }
         
-        return -1;
+        return minCost == Integer.MAX_VALUE ? -1 : minCost;
     }
 
     public static void main(String[] args) {
@@ -42,6 +58,12 @@ class CheapestFlightsWithinKStops {
       dst = 2;
       K = 1;
       System.out.println(sol.findCheapestPrice(n, edges, src, dst, K));
+      int[][] edges2 = {{0,1,5},{1,2,5},{0,3,2},{3,1,2},{1,4,1},{4,2,1}};
+      src = 0;
+      dst = 2;
+      K = 2;
+      System.out.println(sol.findCheapestPrice(n, edges2, src, dst, K));
+
     }
 
 }
