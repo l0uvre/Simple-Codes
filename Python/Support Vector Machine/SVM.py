@@ -1,6 +1,8 @@
 import argparse
 import random
-import reimport time
+import re
+import heapq
+import time
 import numpy as np
 
 
@@ -11,7 +13,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("train_data", help="the data file for training", type=argparse.FileType('r'))
     parser.add_argument("test_data", help="the data file for testing", type=argparse.FileType('r'))
-    parser.add_argument("-t", "--time_budget", help="specifies the limit of time for this run.", type=int)
+    parser.add_argument("-t", "--time_budget", help="specifies the limit of time for this run.", type=int, required=True)
     args = parser.parse_args()
     with args.train_data as data:
         lines = data.readlines()
@@ -19,9 +21,9 @@ def parse_args():
     with args.test_data as data:
         lines = data.readlines()
         X1, y1 = parse_line(lines)
-    return X, y, X1, y1
+    return X, y, X1, y1, args.time_budget
 
-def parse_line(lines):
+def parse_line(lines, test=False):
     space_pattern = re.compile(r'\s+')
     matrix = []
     for line in lines:
@@ -35,17 +37,21 @@ def parse_line(lines):
 
 def main():
     start_time = time.time()
-    X, y, X1, y1 = parse_args()
-    #svm = SVM(kernel_type='quadratic')
-    X, y = X[:400], y[:400]
+    X, y, X1, y1, time_budget = parse_args()
+    io_time = time.time() - start_time
+    n = X.shape[0]
+    step = int(n / 400)
+    if step > 1: 
+        X, y = X[:n:step], y[:n:step] 
     svm = SVM()
-    svm.fit(X, y)
-    #calculate_time = time.time() 
-    print("training error:", cal_error(svm.predict(X), y))
-    print("test error:", cal_error(svm.predict(X1), y1))
-    print("Running Time ", time.time() - start_time)
+    svm.fit(X, y, start_time, time_budget)
+    calculate_time = time.time() 
+    print("training error:", cal_error(svm.predict(X), y) * 100, "%")
+    print("test error:", cal_error(svm.predict(X1), y1) * 100, "%")
     print(y.shape[0], y1.shape[0])
-    #print("Calculate time:", time.time() - calculate_time)
+    print("Calculate time:", time.time() - calculate_time, "s")
+    print("IO time:", time.time() - calculate_time, "s")
+    print("Running Time ", time.time() - start_time, "s")
 
 def cal_error(x1, x2):
     total = x1.shape[0]
@@ -53,12 +59,11 @@ def cal_error(x1, x2):
     for i in range(0, total):
         if x1[i] != x2[i]:
            error += 1 
-    #print(x1, "\t", x1.shape[0])
     return error / total
 
 class SVM:
 
-    def __init__(self, C=1.0, tol=0.001, max_passes=20, kernel_type='linear'):
+    def __init__(self, C=1.0, tol=0.001, max_passes=5, kernel_type='linear'):
         self.C = C
         self.tol = tol
         self.max_passes = max_passes
@@ -76,7 +81,7 @@ class SVM:
     def quadratic(self, x1, x2):
         return np.dot(x1, x2) ** 2
 
-    def fit(self, X, y):
+    def fit(self, X, y, start_time, time_budget):
         self.X = X
         self.y = y
         n, d = X.shape
@@ -85,7 +90,8 @@ class SVM:
         b = 0
         passes = 0
         while passes < self.max_passes:
-            print(passes)
+            if time.time() - start_time + 2 > time_budget:
+                break
             num_changed_alphas = 0
             for i in range(0, n):
                 x_i, y_i, alpha_i = X[i, :], y[i], alpha[i]
@@ -128,7 +134,6 @@ class SVM:
                     else:
                         b = (b1 + b2) / 2
                     num_changed_alphas += 1
-                    #print(i, "\t", j, "\t", L,"\t ", H, "\t ", alpha_i, "\t ", alpha_j,"\t ", b)
             if num_changed_alphas == 0:
                 passes += 1
         self.alpha = alpha
@@ -144,8 +149,6 @@ class SVM:
                 result.append(1)
             else:
                 result.append(-1)
-            #result.append(np.sign(self.classifier_formula(self.alpha,\
-            #    self.X, self.y, x, self.b).astype(int)))
         return np.array(result)
 
     def classifier_formula(self, alpha, X, y, x, b):
