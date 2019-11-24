@@ -17,12 +17,8 @@ public class SumRootToLeafNumbers {
         if (curr.left == null && curr.right == null) {
             return sum + Integer.parseInt(num + curr.val);
         }
-        if (curr.left != null) {
-            sum = dfs(curr.left, num + curr.val, sum);
-        }
-        if (curr.right != null) {
-            sum = dfs(curr.right, num + curr.val, sum);
-        }
+        sum = dfs(curr.left, num + curr.val, sum);
+        sum = dfs(curr.right, num + curr.val, sum);
         return sum;
     }
 }
