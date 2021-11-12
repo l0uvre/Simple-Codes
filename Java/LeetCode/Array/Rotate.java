@@ -27,8 +27,8 @@ public class Rotate {
         /**
          * swap the elements diagonally
          */
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < j; i++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
                 int tmp = matrix[i][j];
                 matrix[i][j] = matrix[j][i];
                 matrix[j][i] = tmp;
