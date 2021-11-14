@@ -1,4 +1,4 @@
-// LC 105 DFS, Tree
+// LC 105 Tree, Divide and Conquer, Recursion
 public class ConstructBinaryTreefromPreAndIn {
 
     public TreeNode buildTree(int[] preorder, int[] inorder) {
@@ -24,7 +24,7 @@ public class ConstructBinaryTreefromPreAndIn {
         }
         TreeNode root = new TreeNode(preorder[preLeft]);
         int rootIndex = indexOfRootIn(inorder, root.val, inLeft, inRight);
-        int leftNum = rootIndex - inLeft;
+        int leftNum = rootIndex - inLeft; // number of nodes in the left sub tree.
 
         root.left = buildTree(preorder, inorder, preLeft + 1, preLeft + leftNum,
                 inLeft, rootIndex - 1);
