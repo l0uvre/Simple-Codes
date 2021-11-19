@@ -1,5 +1,6 @@
 // LC 57 --- Array, Interval
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Stream;
 import java.util.stream.IntStream;
 import java.util.stream.Collectors;
@@ -50,6 +51,7 @@ public class InsertInterval {
         Stream.of(res)
             .flatMapToInt(IntStream::of)
                 .forEach(System.out::println);
+        System.out.println(Arrays.deepToString(res));
     }
 
 }
