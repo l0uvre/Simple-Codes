@@ -18,6 +18,7 @@ public class CorporateFlightBookings {
         }
         return answer;
     }
+
     public static void main(String[] args) {
         CorporateFlightBookings sol = new CorporateFlightBookings(); 
         int[][] bookings = new int[][]{
