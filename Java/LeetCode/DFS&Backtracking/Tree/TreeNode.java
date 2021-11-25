@@ -35,6 +35,7 @@ class TreeNode {
 
     /** [1,2,3,null,5,null, 4, 5, 5, 4, 4] **/
     public static TreeNode mkTree(String str) {
+        /**Process string input and initialize nodes.***/
         String[] vals = str.substring(1, str.length() - 1).split(",\\s*");
         System.out.println(Arrays.toString(vals));
 
