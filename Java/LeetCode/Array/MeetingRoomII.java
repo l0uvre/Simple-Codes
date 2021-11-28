@@ -1,3 +1,4 @@
+/*** LC 253 -- Array, Heap ***/
 import java.util.*;
 
 class Interval {
@@ -13,6 +14,21 @@ class Interval {
 }
  
 public class MeetingRoomII {
+
+    public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        pq.offer(intervals[0][1]);
+
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] >= pq.peek()) {
+                pq.poll();
+            }
+            pq.offer(intervals[i][1]);
+        }
+
+        return pq.size();
+    }
 
     public int minMeetingRooms(List<Interval> intervals) {
         if (intervals == null || intervals.size() == 0) {
@@ -59,14 +75,22 @@ public class MeetingRoomII {
         List<Interval> intervals = makeIntervals(vals);
         MeetingRoomII sol = new MeetingRoomII();
         System.out.println(sol.minMeetingRooms(intervals));
+        System.out.println(sol.minMeetingRooms(vals));
+
         vals = new int[][]{{0,30},{5,10},{15,20}};
         intervals = makeIntervals(vals);
         System.out.println(sol.minMeetingRooms(intervals));
+        System.out.println(sol.minMeetingRooms(vals));
+
         vals = new int[][]{{7,10},{2,4}};
         intervals = makeIntervals(vals);
         System.out.println(sol.minMeetingRooms(intervals));
+        System.out.println(sol.minMeetingRooms(vals));
+
         vals = new int[][]{{5,8},{6,8}};
         intervals = makeIntervals(vals);
         System.out.println(sol.minMeetingRooms(intervals));
+        System.out.println(sol.minMeetingRooms(vals));
+        
     }
 }

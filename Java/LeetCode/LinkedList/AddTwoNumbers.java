@@ -1,31 +1,3 @@
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int x) { val = x; }
-    public static ListNode of(int... args) {
-      ListNode result, p;
-      if (args.length > 0) {
-        result = new ListNode(args[0]);
-      } else {
-        return null;
-      }
-      p = result;
-      for (int i = 1; i < args.length; i++) {
-        p.next = new ListNode(args[i]);
-        p = p.next;
-      }
-      return result;
-    }
-    
-    public void printList() {
-      ListNode p = this;
-      while (p != null) {
-        System.out.print(p.val + " ");
-        p = p.next;
-      }
-      System.out.println();
-    }
-}
 
 public class AddTwoNumbers {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -43,10 +15,6 @@ public class AddTwoNumbers {
             }
         } else if (l2 == null) {
             if (carry == 1) {
-               /** int newCarry = l1.val + carry >= 10 ? 1 : 0;
-                ListNode head = new ListNode((l1.val + carry) % 10);
-                head.next = addTwoNumbersHelper(null, l1.next, newCarry);
-                return head;**/ //original but refactored as below.
                 return carryOnList(l1, carry);
             } else {
                 return l1;

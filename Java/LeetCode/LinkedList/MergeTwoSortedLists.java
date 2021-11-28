@@ -1,53 +1,50 @@
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int x) { val = x; }
-    public static ListNode of(int... args) {
-      ListNode result, p;
-      if (args.length > 0) {
-        result = new ListNode(args[0]);
-      } else {
-        return null;
-      }
-      p = result;
-      for (int i = 1; i < args.length; i++) {
-        p.next = new ListNode(args[i]);
-        p = p.next;
-      }
-      return result;
-    }
-    
-    public void printList() {
-      ListNode p = this;
-      while (p != null) {
-        System.out.print(p.val + " ");
-        p = p.next;
-      }
-      System.out.println();
-    }
-}
+/*** LC 21 --- Linked List, Divide and Conquer/Two Pointers --- ***/
 
 class MergeTwoSortedLists {
-    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-        if (l1 == null) {
-            return l2;
-        } else if (l2 == null) {
-            return l1;
+
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        if (list1 == null) {
+            return list2;
+        } else if (list2 == null) {
+            return list1;
         }
-        int val;
-        val = Math.min(l1.val, l2.val);
-        ListNode head = new ListNode(val);
-        if (l1.val > l2.val) {
-            head.next = mergeTwoLists(l1, l2.next);
+        ListNode head = (list1.val <= list2.val) ? list1: list2;
+        if (list1.val > list2.val) {
+            head.next = mergeTwoLists(list1, list2.next);
         } else {
-            head.next = mergeTwoLists(l1.next, l2);
+            head.next = mergeTwoLists(list1.next, list2);
         }
         return head;
+    }
+
+    public ListNode mergeTwoListsIterative(ListNode list1, ListNode list2) {
+        /** Dummy node added to the head of the merged list **/
+        ListNode dummy = new ListNode(0, null);
+        ListNode tail = dummy;
+        while (list1 != null || list2 != null) {
+            if (list1 == null) {
+                tail.next = list2;
+                break;
+            } else if (list2 == null) {
+                tail.next = list1;
+                break;
+            } else {
+                if (list1.val <= list2.val) {
+                    tail.next = list1;
+                    tail = list1;
+                    list1 = list1.next;
+                } else {
+                    tail.next = list2;
+                    tail = list2;
+                    list2 = list2.next;
+                }
+            }
+        }
+        return dummy.next;
     }
 
     public static void main(String[] args) {
         MergeTwoSortedLists sol = new MergeTwoSortedLists();
         sol.mergeTwoLists(ListNode.of(1,2,4), ListNode.of(1,3,4)).printList();
-    
     }
 }

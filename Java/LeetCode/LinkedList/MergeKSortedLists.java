@@ -1,33 +1,32 @@
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int x) { val = x; }
-    public static ListNode of(int... args) {
-      ListNode result, p;
-      if (args.length > 0) {
-        result = new ListNode(args[0]);
-      } else {
-        return null;
-      }
-      p = result;
-      for (int i = 1; i < args.length; i++) {
-        p.next = new ListNode(args[i]);
-        p = p.next;
-      }
-      return result;
-    }
-    
-    public void printList() {
-      ListNode p = this;
-      while (p != null) {
-        System.out.print(p.val + " ");
-        p = p.next;
-      }
-      System.out.println();
-    }
-}
+/*** LC 23 --- Linked List, Heap / Divide and Conquer ***/
+import java.util.*;
 
 public class MergeKSortedLists {
+
+    public ListNode mergeKListsUsingHeap(ListNode[] lists) {
+        /*** dummy node added to the head of the result **/
+        ListNode dummy = new ListNode(0, null);
+        ListNode tail = dummy;
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) ->
+                Integer.compare(a.val, b.val));
+        if (lists != null) {
+            for (ListNode list : lists) {
+                if (list != null) {
+                    pq.offer(list);
+                }
+            }
+        }
+        while (!pq.isEmpty()) {
+            ListNode curr = pq.poll();
+            tail.next = curr;
+            tail = curr;
+            if (curr.next != null) {
+                pq.offer(curr.next);
+            }
+        }
+        return dummy.next;
+    }
+    
     public ListNode mergeKLists(ListNode[] lists) {
         if (lists == null || lists.length == 0) {
             return null;
@@ -56,9 +55,7 @@ public class MergeKSortedLists {
         } else if (l2 == null) {
             return l1;
         }
-        int val;
-        val = Math.min(l1.val, l2.val);
-        ListNode head = new ListNode(val);
+        ListNode head = (l1.val <= l2.val) ? l1 : l2;
         if (l1.val > l2.val) {
             head.next = mergeTwoLists(l1, l2.next);
         } else {
