@@ -21,10 +21,11 @@ public class PalindromicSubstrings {
         }
 
         int k = 2;
-        /** length of the substring is k + 1, the rightmost
-         * substring starts with (n - 1) - k = n - k - 1
+        /** substrings with length >= 3, generalized situation 
+         * length of the substring is k + 1, 
+         * k + 1 <= n, so k < n
          * */
-        while ((n - k) > 0) {
+        while (k < n) {
             //int lenOfSubstring = k + 1;
             for (int i = 0; i < (n - k); i++) {
                 if (s.charAt(i) == s.charAt(i + k)) {
