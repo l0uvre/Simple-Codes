@@ -62,6 +62,6 @@ public class UnionFind {
         uf.union(7, 9);
         System.out.println("Max component size: " + uf.maxUnionSize());
 
-}
+    }
     
 }

@@ -1,3 +1,8 @@
+## Graph
+
+### Notes 
+ * When doing BFS/DFS on graph, it's better to mark nodes when expanding the edges. Otherwise, a node that have yet to but should be visited in the stack/queue would be added twice. Sure you can double check whether it's visited when trying to expand it.  --- check my LC 261 two implementations.
+
 ## Dynamic Programming
 
 ### Concepts / Explanation
