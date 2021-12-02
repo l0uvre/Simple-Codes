@@ -1,63 +1,24 @@
 // Leetcode 154 Binary Search 
 public class FindMinRotatedII {
-    /***
-    public int findMin(int[] nums) {
-        if (nums == null || nums.length == 0) {
-            return -1;
-        } else {
-            int start = 0, end = nums.length - 1;
-            int mid = -1;
-            while (start <= end) {
-                mid = start + (end - start) / 2;
-                if (start == mid) {
-                    mid = nums[start] > nums[end] ? end : start;
-                    break;
-                }
-                if (nums[mid] < nums[start]) {
-                    end = mid;
-                } else if (nums[mid] > nums[start]) {
-                    if (nums[start] > nums[end]) {
-                        start = mid + 1; 
-                    } else if (nums[start] < nums[end]) {
-                        end = mid;
-                    } else {
-                        start += 1;
-                    }
-                } else {
-                    start += 1;
-                }
-            
-            }
-            return nums[mid];
-        }
-    }
-    **/
-
     /**
      * On Nov. 9 2021 more concise.
+     * Updated on Nov. 30 2021
      */
     public int findMin(int[] nums) {
         int left = 0, right = nums.length - 1;
-        int mid = 0;
-        while (left <= right) {
-            mid = left + (right - left) / 2;
-            
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+
             if (nums[mid] > nums[right]) {
                 left = mid + 1;
             } else if (nums[mid] == nums[right]) {
-                if (nums[left] < nums[mid]) {
-                    right = mid - 1;
-                } else if (nums[left] > nums[mid]) {
-                    right = mid;
-                } else {
-                    right--; //skip the duplicate
-                }
+                right--;
             } else {
                 right = mid;
             }
 
         }
-        return nums[mid];
+        return nums[left];
     }
     
 
