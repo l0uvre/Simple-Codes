@@ -1,3 +1,8 @@
+## Linked List
+
+### Tricks
+ * Create a sentinel node which is better for creating a linked list/ traversal
+
 ## Graph
 
 ### Notes 

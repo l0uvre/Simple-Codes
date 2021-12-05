@@ -30,6 +30,34 @@ public class TopKFreq {
         }
     }
 
+    /** use a minHeap to store at most top K elements
+     * O(nlogk)
+     * **/
+    public int[] topKFrequent(int[] nums, int k) {
+        if (nums == null || nums.length < k) {
+            return new int[]{}; 
+        } else {
+            Map<Integer, Integer> freq = new HashMap<>();
+            Queue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(
+                    (a, b) -> Integer.compare(a.getValue(), b.getValue()));
+            for (int num : nums) {
+                freq.put(num, freq.getOrDefault(num, 0) + 1); 
+            }
+
+            for (Map.Entry<Integer, Integer> entry: freq.entrySet()) {
+                minHeap.offer(entry); 
+                if (minHeap.size() > k) {
+                    minHeap.poll();
+                }
+            }
+            int[] res = new int[k];
+            for (int i = k - 1; i >= 0; i--) {
+                res[i] = minHeap.poll().getKey();
+            } 
+            return res;
+        }
+    }
+
     //Method II: using a priority queue
     public List<Integer> topKFrequentII(int[] nums, int k) {
         List<Integer> res = new ArrayList<>();
@@ -37,17 +65,21 @@ public class TopKFreq {
             return res; 
         } else {
             Map<Integer, Integer> freq = new HashMap<>();
-            Queue<Map.Entry<Integer, Integer>> maxHeap = new PriorityQueue<>(
-                    (a, b) -> Integer.compare(b.getValue(), a.getValue()));
+            Queue<Map.Entry<Integer, Integer>> minHeap = new PriorityQueue<>(
+                    (a, b) -> Integer.compare(a.getValue(), b.getValue()));
             for (int num : nums) {
                 freq.put(num, freq.getOrDefault(num, 0) + 1); 
             }
+
             for (Map.Entry<Integer, Integer> entry: freq.entrySet()) {
-                maxHeap.offer(entry); 
+                minHeap.offer(entry); 
+                if (minHeap.size() > k) {
+                    minHeap.poll();
+                }
             }
 
-            while (res.size() < k && !maxHeap.isEmpty()) {
-                res.add(maxHeap.poll().getKey());
+            while (!minHeap.isEmpty()) {
+                res.add(minHeap.poll().getKey());
             }
             return res;
         }
