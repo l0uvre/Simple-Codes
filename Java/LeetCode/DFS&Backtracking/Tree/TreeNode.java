@@ -19,7 +19,7 @@ class TreeNode {
     /***
      * TODO: Write A LeverOrderTraversal to beautifully print the tree
      *      Use BFS and List to print level by level; 
-     * public static void printLevelOrder(TreeNode root);
+     * public static List<String> levelOrderTraverse(TreeNode root);
      * 
      * **/
 

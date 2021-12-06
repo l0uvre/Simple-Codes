@@ -1,3 +1,4 @@
+/*** LC 56 -- Array, Interval ***/
 import java.util.*;
 
 class Interval {
@@ -13,6 +14,35 @@ class Interval {
  }
 
 public class MergeIntervals {
+   
+    /** Sort the intervals based on the starting point,
+     * and merge the adjacent ones accordingly, O(nlogn) **/
+    public int[][] merge(int[][] intervals) {
+        if (intervals == null || intervals.length == 0) {
+            return new int[][]{};
+        } else {
+            List<int[]> merged = new ArrayList<>();
+            Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+            merged.add(intervals[0]);
+            for (int i = 1; i < intervals.length; i++) {
+                int[] last = merged.get(merged.size() - 1);
+                int[] curr = intervals[i];
+                /** if the current interval overlaps with the
+                 * last one stored **/
+                if (last[1] >= curr[0]) {
+                    /** merge these two, pick the larger end **/
+                    last[1] = Math.max(last[1], curr[1]);
+                } else {
+                    merged.add(curr);
+                }
+            }
+            int[][] res = new int[merged.size()][2];
+            for (int i = 0; i < res.length; i++) {
+                res[i] = merged.get(i);
+            }
+            return res;
+        }
+    }
     public List<Interval> merge(List<Interval> intervals) {
         if (intervals == null || intervals.size() < 2) {
             return intervals;
