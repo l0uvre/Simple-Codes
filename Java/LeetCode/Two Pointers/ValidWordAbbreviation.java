@@ -1,3 +1,4 @@
+/** LC 408 -- Two Pointers, String **/
 public class ValidWordAbbreviation {
 
     /** use two pointers, jump the number in abbr for the pointer in word

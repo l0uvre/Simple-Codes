@@ -1,47 +1,55 @@
+/** LC 227 -- Stack ***/
 import java.util.*;
 
 public class BasicCalculatorII {
     
-    /** More general approach: infix to postfix(Stack) and then evaluate the postfix. **/
+    /** Use stack to simulate the process 
+     * before we add a num to the stack, check the sign before it,
+     * the default sign is '+';
+     * '+' : push(num);
+     * '-' : push(-num);
+     * '* /' : push(pop() * or / num). **/
     public int calculate(String s) {
-        int res = 0;
         if (s == null || s.length() == 0) {
-            return res;
-        }
-        //s.replace(" ", "");
-        if (s.length() == 0) {
-            return res;
-        }
-        //System.out.println(s);
-        
-        int num = 0;
-        char sign = '+';
-        Stack<Integer> stack = new Stack<>();
-        for (int i = 0; i < s.length(); i++) {
-            char curr = s.charAt(i);
-            if (Character.isDigit(curr)) {
-                num = num * 10 + curr - '0';
-            }
-            
-            if ((!Character.isDigit(curr) && curr != ' ') || i == s.length() - 1) {
-                if (sign == '+') {
-                    stack.push(num);
-                } else if (sign == '-') {
-                    stack.push(-num);
-                } else if (sign == '*') {
-                    stack.push(stack.pop() * num);
-                } else if (sign == '/') {
-                    stack.push(stack.pop() / num);
+            return 0;
+        } else {
+            /** the first char maybe a '-' sign,
+             * and we need a sign for the first num. **/
+            char sign = '+';
+            Deque<Integer> stack = new LinkedList<>();
+            for (int i = 0; i < s.length(); i++) {
+                /** consume space **/
+                if (s.charAt(i) == ' ') {
+                    continue;
                 }
-                sign = curr;
-                num = 0;
+                if (!Character.isDigit(s.charAt(i))) {
+                    sign = s.charAt(i);
+                } else {
+                    int num = 0;
+                    while (i < s.length() && Character.isDigit(s.charAt(i))) {
+                        num = num * 10 + Character.getNumericValue(s.charAt(i));
+                        i++;
+                    }
+                    /** set it to the last digit of num, as we would increment i
+                     * at the last step**/
+                    i--; 
+                    if (sign == '+') {
+                        stack.push(num);
+                    } else if (sign == '-') {
+                        stack.push(-num);
+                    } else if (sign == '*') {
+                        stack.push(stack.pop() * num);
+                    } else {
+                        stack.push(stack.pop() / num);
+                    }
+                }
             }
+            int res = 0;
+            while (!stack.isEmpty()) {
+                res += stack.pop();
+            }
+            return res;
         }
-        
-        while (!stack.empty()) {
-            res += stack.pop();
-        }
-        return res;
     }
 
     public static void main(String[] args) {

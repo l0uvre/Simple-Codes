@@ -23,16 +23,10 @@ public class Quick {
     while (true) {
       do {
         i++;
-        if (i >= end) {
-          break;
-        }
-      } while (arr[i] < pivot);
+      } while (i <= end && arr[i] < pivot);
 
       do {
         j--;
-        if (j <= begin) {
-          break;
-        }
       } while (arr[j] > pivot);
 
       if (i >= j) {
