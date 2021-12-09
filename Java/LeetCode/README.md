@@ -1,4 +1,4 @@
-## Linked List
+# Linked List
 
 ### Tricks
  * Create a sentinel node which is better for creating a linked list/ traversal
@@ -6,7 +6,8 @@
 ## Graph
 
 ### Notes 
- * When doing BFS/DFS on graph, it's better to mark nodes when expanding the edges. Otherwise, a node that have yet to but should be visited in the stack/queue would be added twice. Sure you can double check whether it's visited when trying to expand it.  --- check my LC 261 two implementations.
+ * When doing BFS/DFS on graph, it's better to mark/visit the nodes when add them into the queue. Otherwise, a node that have yet to but should be visited would be added more than once into the stack/queue. Sure you can double check whether it's visited when it poped out of the queue/stack.  --- check my LC 261 two implementations.
+
 
 ## Dynamic Programming
 
