@@ -1,29 +1,38 @@
+/** LC 139 -- Dynamic Programming. **/
 import java.util.*;
 
 class WordBreak {
+
+    /** dp, bottom up approach. **/
     public boolean wordBreak(String s, List<String> wordDict) {
-        if (s == null || s.length() == 0) {
-            return true;
-        } else if (wordDict == null || wordDict.size() == 0) {
-            return false;
-        }
+        /** dp[i] means if s[0:i] the prefix is valid;
+         * then dp[j] = true if dp[i] & s[i:j] is in wordDict.
+         * */
         boolean[] dp = new boolean[s.length() + 1];
-        Set<String> words = new HashSet<>(wordDict);
+
+        /** base case "" is valid. **/
         dp[0] = true;
-        for (int i = 1; i <= s.length(); i++) {
-            for (int j = 0; j < i; j++) {
-                if (dp[j]) {
-                    if (!dp[i]) {
-                        dp[i] = words.contains(s.substring(j, i));
-                    }
+
+        Set<String> words = new HashSet<>(wordDict);
+
+        /** calculate dp[1] to dp[n + 1]. **/
+        for (int j = 1; j <= s.length(); j++) {
+            for (int i = 0; i < j; i++) {
+                if (dp[i] && 
+                        words.contains(s.substring(i, j))) {
+                    dp[j] = true;
+                    /** find a vaild case for prefix s[:j], go
+                     * to check s[: j+1]. **/
+                    break;
                 }
             }
         }
+        /** whether s[0:n+1] is valid. **/
         return dp[s.length()];
     }
 
     public static void main(String[] args) {
         WordBreak sol = new WordBreak();
-        System.out.println(sol.wordBreak("leetcode", new ArrayList<>(Arrays.asList("leet", "code"))));
+        System.out.println(sol.wordBreak("leetcode", Arrays.asList("leet", "code")));
     }
 }
