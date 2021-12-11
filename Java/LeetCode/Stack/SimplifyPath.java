@@ -5,8 +5,8 @@ public class SimplifyPath {
     
     /** use string.split(). **/
     public String simplifyPath(String path) {
-       Deque<String> stack = new LinkedList<>();
-       for (String str : path.split("/")) {
+        Deque<String> stack = new LinkedList<>();
+        for (String str : path.split("/+")) {
            if ("..".equals(str)) {
                if (!stack.isEmpty()) {
                    stack.pop();
@@ -14,16 +14,16 @@ public class SimplifyPath {
            } else if (!"".equals(str) && !".".equals(str)) {
                stack.push(str);
            }
-       }
-       if (stack.isEmpty()) {
+        }
+        if (stack.isEmpty()) {
            return "/";
-       } else {
+        } else {
            StringBuilder sb = new StringBuilder();
            while (!stack.isEmpty()) {
                sb.append("/").append(stack.pollLast());
            }
            return sb.toString();
-       }
+        }
     }
 
     /** using stack to store the directories and

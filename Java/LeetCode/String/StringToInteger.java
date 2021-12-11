@@ -1,55 +1,70 @@
-// Leetcode 8 String
+/** Leetcode 8 String . **/
 public class StringToInteger {
 
+    /** just scan the characters from left to right
+     * skip leading characters, parse the sign and number. **/
     public int myAtoi(String str) {
-        if (str == null || str.length() < 1) {
+        if (str == null || str.length() == 0) {
             return 0;
-        }     
-        int sign = 1;
-        int res = 0;
-        boolean signed = false;
-        boolean whiteSkipped = false;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == ' ' && !whiteSkipped) {
-                while (i < str.length() && str.charAt(i) == ' ') {
+        } else {
+            int res = 0;
+            /** the default integer is positive. **/
+            int sign = 1;
+            int i = 0;
+            while (i < str.length()) {
+                /** skip leading white space. **/
+                while(i < str.length() && str.charAt(i) == ' ') {
                     i++;
                 }
-                whiteSkipped = true;
+
                 if (i >= str.length()) {
                     break;
                 }
-            }
 
-            if (res == 0 && !signed) {
+                /** get the sign if any. **/
                 if (str.charAt(i) == '-') {
-                    sign = -sign;
-                    signed = true;
-                    whiteSkipped = true;
-                    continue;
+                    sign = -1;
+                    i++;
                 } else if (str.charAt(i) == '+') {
-                    signed = true;
-                    whiteSkipped = true;
-                    continue;
-                } 
-            }
-
-            if (str.charAt(i) < '0' || str.charAt(i) > '9') {
+                    sign = 1;
+                    i++;
+                } else if (!Character.isDigit(str.charAt(i))) {
+                    /** if there are some 
+                     * non digit chars before the number. **/
+                    break;
+                }
+                /** if there is no chars left. **/
+                if (i >= str.length()) {
+                    break;
+                }
+                char ch = str.charAt(i);
+                while (Character.isDigit(ch)) {
+                    /** dealing with overflow. **/
+                    if (sign == 1) {
+                        long currValue = (long) res * 10 + (ch - '0');
+                        if (currValue >= Integer.MAX_VALUE) {
+                            return Integer.MAX_VALUE;
+                        }
+                        res = (int) currValue;
+                    } else if (sign == -1) {
+                        long currValue = (long) res * 10 - (ch - '0');
+                        if (currValue <= Integer.MIN_VALUE) {
+                            return Integer.MIN_VALUE;
+                        } else {
+                            res = (int) currValue;
+                        }
+                    }
+                    i++;
+                    if (i >= str.length()) {
+                        break;
+                    }
+                    ch = str.charAt(i);
+                }
                 break;
             }
-            
-            signed = true;
-            whiteSkipped = true;
-
-            int digit = str.charAt(i) - '0';
-            if (res > Integer.MAX_VALUE / 10 || (res == Integer.MAX_VALUE / 10 
-                        && digit > Integer.MAX_VALUE % 10)) {
-                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;        
-            } else {
-                res = res * 10 + digit;
-            }
+            return res;
         }
-        return res * sign;
-    } 
+    }
 
     public static void main(String[] args) {
         StringToInteger sti = new StringToInteger();
@@ -59,6 +74,7 @@ public class StringToInteger {
         System.out.println(sti.myAtoi("with 29384"));
         System.out.println(sti.myAtoi("-2319438593588458"));
         System.out.println(sti.myAtoi("-+2"));
+        System.out.println(sti.myAtoi("+2319438593588458"));
     }
 
 }
