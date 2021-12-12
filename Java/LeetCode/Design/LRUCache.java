@@ -1,92 +1,93 @@
+/** LC 146 -- Design, Doubly Linked List, HashTable. **/
 import java.util.*;
+
+/** Every time we call put(), try to add the node to the head
+ * of the linked list; every time we call get(), remove the node from
+ * the linked list and add it to the head; we delete the tail node if
+ * the capacity is reached;
+ *
+ * The reason why we used doubly linked list is because it has O(1)
+ * deletion for any node and O(1) addition to the tail or the head.
+ **/
 class LRUCache {
-    private int size;
-    private Node head;
+    /** sentinel head **/
+    private Node head; 
+    /** sentinel tail **/
     private Node tail;
-    private Map<Integer, Node> map;
+    private Map<Integer, Node> keyToNode;
     private int capacity;
     
     class Node {
-        Integer key;
-        Integer val;
+        int key, val;
         Node prev;
         Node next;
-        Node(Integer key, Integer val) {
+        Node (int key, int val) {
             this.key = key;
             this.val = val;
             prev = null;
             next = null;
         }
     }
+
+    private void addToHead(Node node) {
+        Node next = head.next;
+        head.next = node;
+        node.prev = head;
+        node.next = next;
+        next.prev = node;
+    }
+
+    private void remove(Node node) {
+        Node prev = node.prev;
+        Node next = node.next;
+        prev.next = next;
+        next.prev = prev;
+    }
+
+    private void removeTail() {
+        remove(tail.prev);
+    }
     
     public LRUCache(int capacity) {
+        head = new Node(-1, -1);
+        tail = new Node(-1, -1);
+        head.next = tail;
+        tail.prev = head;
+        keyToNode = new HashMap<>();
         this.capacity = capacity;
-        map = new HashMap<>();
-        head = tail = null;
-        size = 0;
+    }
+
+    private int size() {
+        return keyToNode.size();
     }
     
-    private void remove(Node curr) {
-        Node prev = curr.prev;
-        Node next = curr.next;
-        if (prev != null) {
-            prev.next = next;
-        }
-        if (next != null) {
-            next.prev = prev;
-        }
-        
-        if (curr == tail) {
-            tail = prev;
-        }
-        
-        if (curr == head) {
-            head = next;
-        }
-    }
-    
-    private void addToTail(Node curr) {
-        if (tail != null) {
-            tail.next = curr;
-        }
-        curr.prev = tail;
-        curr.next = null;
-        tail = curr;
-        if (head == null) {
-            head = curr;
-        }
-    }
-    
+   
     public int get(int key) {
-        if (!map.containsKey(key)) {
+        if (!keyToNode.containsKey(key)) {
             return -1;
         } else {
-            Node curr = map.get(key);
-            int res = curr.val;
-            remove(curr);
-            addToTail(curr);
-            return res;
+            Node node = keyToNode.get(key);
+            remove(node);
+            addToHead(node);
+            return node.val;
         }
+
     }
     
     public void put(int key, int value) {
-        if (map.containsKey(key)) {
-            Node curr = map.get(key);
-            map.remove(key);
-            remove(curr);
-            curr = new Node(key, value);
-            map.put(key, curr);
-            addToTail(curr);
+        if (keyToNode.containsKey(key)) {
+            Node node = keyToNode.get(key);
+            node.val = value;
+            remove(node);
+            addToHead(node);
         } else {
-            Node curr = new Node(key, value);
-            if (size < capacity) {
-                size++;
-            } else {
-                map.remove(head.key);
-                remove(head); // this order is important to avoid NullPointer
+            if (capacity == size()) {
+                keyToNode.remove(tail.prev.key);
+                removeTail();
             }
-            addToTail(curr);
-            map.put(key, curr); 
+            Node node = new Node(key, value);
+            keyToNode.put(key, node);
+            addToHead(node);
         }
     }
 

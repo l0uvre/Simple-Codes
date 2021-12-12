@@ -9,6 +9,13 @@ public class WordBreakII {
         return dfs(s, new HashSet<>(wordDict), new HashMap<>());
     }
 
+    /** TODO : this approach is better for short string s and
+     * large collections of dict. **/
+    private void dfs(String s, int index, StringBuilder currSen,
+            Set<String> dict) {
+
+    }
+
     /** return a list of sentences that consist of separate words 
      * by adding space to string s. **/
     private List<String> dfs(String s, Set<String> wordDict, 
