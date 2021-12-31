@@ -25,6 +25,19 @@ public class MultiplyStrings {
                 pos[p2] = sum % 10;
             }
         }
+        /***
+         *    123
+         *     45
+         *   ----
+         *     15
+         *    10
+         *   05
+         *    12
+         *   08
+         *  04
+         *  -----
+         *  05535
+          **/
         StringBuilder sb = new StringBuilder();
         for (int digit : pos) {
             if (sb.length() == 0) {
