@@ -20,10 +20,11 @@ public class CloneGraph {
 
     public Node cloneGraph(Node node) {
         Map<Integer, Node> created = new HashMap<>();
-        return cloneGraph(node, created);
+        return clone(node, created);
     }
 
-    private Node cloneGraph(Node node, Map<Integer, Node> created) {
+    /** Clone nodes in the means of DFS. **/
+    private Node clone(Node node, Map<Integer, Node> created) {
         if (node == null) {
             return null;
         } else if (created.containsKey(node.val)) {
@@ -34,10 +35,37 @@ public class CloneGraph {
             Node curr = new Node(node.val);
             created.put(curr.val, curr);
             for (Node neighbor : node.neighbors) {
-                Node next = cloneGraph(neighbor, created);
+                Node next = clone(neighbor, created);
                 curr.neighbors.add(next);
             }
             return curr;
         }
     } 
+
+    /** Clone nodes in the means of BFS. **/
+    private Node cloneGraphBFS(Node node, Map<Integer, Node> created) {
+        if (node != null) {
+            Queue<Node> q = new LinkedList<>();
+            q.offer(node);
+            created.put(node.val, new Node(node.val));
+
+            while (!q.isEmpty()) {
+                Node curr = q.poll();
+                Node copy = created.get(curr.val);
+                for (Node neighbor: curr.neighbors) {
+                    if (!created.containsKey(neighbor.val)) {
+                        Node copyOfNeighbor = new Node(neighbor.val);
+                        copy.neighbors.add(copyOfNeighbor);
+                        created.put(neighbor.val, copyOfNeighbor);
+                        q.offer(neighbor);
+                    } else {
+                        copy.neighbors.add(created.get(neighbor.val));
+                    }
+                }
+            }
+            return created.get(node.val);
+        } else {
+            return null;
+        }
+    }
 }
