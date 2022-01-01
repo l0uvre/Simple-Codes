@@ -1,4 +1,8 @@
-# Linked List
+# Inspiration
+Keep doing and keep working on.
+ 
+Everythin will pay off in the foreseeable future.
+## Linked List
 
 ### Tricks
  * Create a sentinel node which is better for creating a linked list/ traversal
