@@ -6,11 +6,15 @@ public class RemoveNthFromEndList {
         ListNode delayed = head;
         for (int i = 0; i < n; i++) {
             pointer = pointer.next;
-            if (pointer == null) {
-                head = head.next;
-                return head;
-            }
         }
+        /** if n == len(list), then remove the head 
+         * and return. **/
+        if (pointer == null) {
+            head = head.next;
+            return head;
+        }
+        /** use two pointers to get the previous node
+         * to the node that will be removed. **/
         while (pointer.next != null) {
             pointer = pointer.next;
             delayed = delayed.next;
