@@ -34,16 +34,14 @@ public class BinaryTreeVerticalOrderTraversal {
         Queue<Node> q = new LinkedList<>();
         q.offer(new Node(treeNode, 0));
         while (!q.isEmpty()) {
-            for (int i = q.size(); i > 0; i--) {
-                Node n = q.poll();
-                map.putIfAbsent(n.col, new LinkedList<>());
-                map.get(n.col).add(n.node.val);
-                if (n.node.left != null) {
-                    q.offer(new Node(n.node.left, n.col - 1));
-                }
-                if (n.node.right != null) {
-                    q.offer(new Node(n.node.right, n.col + 1));
-                }
+            Node n = q.poll();
+            map.putIfAbsent(n.col, new LinkedList<>());
+            map.get(n.col).add(n.node.val);
+            if (n.node.left != null) {
+                q.offer(new Node(n.node.left, n.col - 1));
+            }
+            if (n.node.right != null) {
+                q.offer(new Node(n.node.right, n.col + 1));
             }
         }
     }

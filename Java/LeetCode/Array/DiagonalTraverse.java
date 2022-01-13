@@ -1,7 +1,5 @@
 /** LC 498 -- Matrix ***/
 import java.util.*;
-
-/*** LC 498 --- Matrix ***/
 public class DiagonalTraverse {
 
 
