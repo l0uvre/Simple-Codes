@@ -19,7 +19,7 @@ public class ConstructBinaryTreeString {
             return null;
         }
         Deque<TreeNode> stack = new LinkedList<>();
-        for (int i = 0; i < s.length();) {
+        for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             if (ch == '-' || (ch >= '0' && ch <= '9')) {
                 int val = 0;
@@ -37,27 +37,22 @@ public class ConstructBinaryTreeString {
                     }
                     ch = s.charAt(i);
                 }
+                i--;
                 
                 TreeNode curr = new TreeNode(val * sign);
-                if (!stack.isEmpty()) {
-                    TreeNode parent = stack.peek();
-                    if (parent.left == null) {
-                        parent.left = curr;
-                    } else {
-                        parent.right = curr;
-                    }
-                }
                 stack.push(curr);
 
             } else if (ch == ')') {
-                stack.pop();
-                i++;
-            } else {
-                i++;
+                TreeNode curr = stack.pop();
+                TreeNode parent = stack.peek();
+                if (parent.left == null) {
+                    parent.left = curr;
+                } else {
+                    parent.right = curr;
+                }
             }
         }
         return stack.pop();
-    }   
-    
+    }
 
 }

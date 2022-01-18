@@ -1,23 +1,6 @@
 /** LC 317 -- BFS, graph **/
 import java.util.*;
 public class ShortestDistanceAllBuildings {
-    private class Point {
-        int x;
-        int y;
-        int distance;
-        Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-            distance = 0;
-        }
-
-        Point(int x, int y, int d) {
-            this.x = x;
-            this.y = y;
-            distance = d;
-        }
-    }
-
 
     private static int[] DX = {1, -1, 0, 0};
     private static int[] DY = {0, 0, -1, 1};
@@ -65,31 +48,26 @@ public class ShortestDistanceAllBuildings {
         int m = grid.length;
         int n = grid[0].length;
         boolean[][] visited = new boolean[m][n];
-        Queue<Point> q = new LinkedList<>();
+        /** {row, col, distance}. **/
+        Queue<int[]> q = new LinkedList<>();
         /** add the house to the queue **/
-        q.offer(new Point(i, j));
+        q.offer(new int[]{i, j, 0});
+        visited[i][j] = true;
 
         while (!q.isEmpty()) {
-            Point curr = q.poll();
-
-            if (visited[curr.x][curr.y]) {
-                continue;
-            }
-            visited[curr.x][curr.y] = true;
-            dis[curr.x][curr.y] += curr.distance;
-            count[curr.x][curr.y] += 1;
+            int[] curr = q.poll();
 
             for (int k = 0; k < DX.length; k++) {
-                int x1 = curr.x + DX[k];
-                int y1 = curr.y + DY[k];
+                int x1 = curr[0] + DX[k];
+                int y1 = curr[1] + DY[k];
                 if (x1 >= 0 && x1 < m && y1 >= 0
                         && y1 < n && !visited[x1][y1]) {
                     if (grid[x1][y1] == 0) {
-                        //dis[x1][y1] += (curr.distance + 1);
-                        //count[x1][y1] += 1;
-                        //visited[x1][y1] = true;
-                        q.offer(new Point(x1, y1, 
-                                    curr.distance + 1));
+                        dis[x1][y1] += curr[2] + 1;
+                        count[x1][y1] += 1;
+                        visited[x1][y1] = true;
+                        q.offer(new int[]{x1, y1, 
+                                    curr[2] + 1});
                     }
                 }
             }
