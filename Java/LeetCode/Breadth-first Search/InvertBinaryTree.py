@@ -14,19 +14,19 @@ class Solution:
     A BFS 
     '''
     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if (root is None):
+            return root
         queue = deque()
         queue.append(root)
         while len(queue) > 0:
             n = len(queue) # number of nodes in this level
-            nodes = [1] * n
             for i in range(0, n):
-                nodes[i] = queue.popleft()
-            for node in nodes:
-                if node is not None:
-                    l = node.left
-                    node.left = node.right
-                    node.right = l
+                node = queue.popleft()
+                l = node.left
+                node.left = node.right
+                node.right = l
+                if (node.left is not None):
                     queue.append(node.left)
+                if (node.right is not None):
                     queue.append(node.right)
         return root
-
