@@ -1,6 +1,12 @@
 /*** LC 11 --- Array, Two Pointers ***/
 public class ContainerWithMostWater {
 
+    /**
+     * use two pointers, one is at the leftmost, the other
+     * it at the rightmost initially; the amount of water it
+     * can hold is equal to min(left, right) * (right - left);
+     * we then increase/decrease the pointer with a smaller value.
+     * **/
     public int maxArea(int[] height) {
         int i = 0, j = height.length - 1;
         int res = -1;

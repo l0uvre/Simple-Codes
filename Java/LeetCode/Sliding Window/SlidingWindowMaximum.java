@@ -1,6 +1,12 @@
 /*** LC 239  --- Sliding Window, Deque ---***/
 import java.util.*;
 public class SlidingWindowMaximum {
+
+    /**
+     * Maintain a monotonic queue to only keep track of items in range and
+     * larger items than the current item during the iteration;
+     * So the queue is monotonic and the top of it is always the largest.
+     * */
     public int[] maxSlidingWindow(int[] nums, int k) {
         /** Use deque to store the promising items' indexes **/
         Deque<Integer> deque = new LinkedList<>();
@@ -10,7 +16,7 @@ public class SlidingWindowMaximum {
             if (!deque.isEmpty() && deque.peek() < i - k + 1) {
                 deque.poll();
             }
-            /** Pop up those items that can not be the max **/
+            /** Remove those items that can not be the max **/
             while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
                 deque.pollLast();
             }
