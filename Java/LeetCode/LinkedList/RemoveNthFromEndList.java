@@ -1,6 +1,11 @@
 /** Leetcode 19 -- Linked List, Two Pointers --- **/
 public class RemoveNthFromEndList {
 
+    /**
+     * use two pointers, one goes forward n steps ahead; and
+     * then the other start moving with the faster pointer until
+     * the faster one reach the end of the list; finally we can delete
+     * the next node of the slower pointer. **/
     public ListNode removeNthFromEnd(ListNode head, int n) {
         ListNode pointer = head;
         ListNode delayed = head;
@@ -14,7 +19,7 @@ public class RemoveNthFromEndList {
             return head;
         }
         /** use two pointers to get the previous node
-         * to the node that will be removed. **/
+         * of the node that will be removed. **/
         while (pointer.next != null) {
             pointer = pointer.next;
             delayed = delayed.next;
